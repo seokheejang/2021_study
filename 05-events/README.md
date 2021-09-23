@@ -1,5 +1,4 @@
 # Events
----
 ## Passing arguments and this to listeners
 ## Asynchronous vs. synchronous
 ## Handling events only once

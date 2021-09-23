@@ -1,5 +1,4 @@
 # FS
----
 ## Synchronous example
 ## Callback example
 ## Promise example
