@@ -32,8 +32,7 @@ http.get({
 ```
 #### new Agent([options])
 options: agent 설정에 구성 가능한 옵션 집합
-
-keepAlive, keepAliveMsecs, maxSockets, maxTotalSockets, maxFreeSockets, scheduling, timeout 
+* keepAlive, keepAliveMsecs, maxSockets, maxTotalSockets, maxFreeSockets, scheduling, timeout 
 ```js
 const http = require('http');
 const keepAliveAgent = new http.Agent({ keepAlive: true });
@@ -193,12 +192,51 @@ http.request()를 사용하면 데이터가 없더라도 항상 요청의 끝을
 ### http.request(url[, options][, callback])
 
 ### http.validateHeaderName(name)
+res.setHeader(name, value)가 호출될 때 수행되는 제공된 '이름'에 대해 낮은 수준의 유효성 검사를 수행한다.
 
 ### http.validateHeaderValue(name, value)
 
 
 # URL
+url 모듈은 URL 확인 및 구문 분석을 위한 유틸리티를 제공한다.
+```js
+const url = require('url');
+```
+
 ## URL strings and URL objects
+URL 문자열은 의미 있는 여러 구성 요소를 포함하는 구조화된 문자열이다.
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                              href                                              │
+├──────────┬──┬─────────────────────┬────────────────────────┬───────────────────────────┬───────┤
+│ protocol │  │        auth         │          host          │           path            │ hash  │
+│          │  │                     ├─────────────────┬──────┼──────────┬────────────────┤       │
+│          │  │                     │    hostname     │ port │ pathname │     search     │       │
+│          │  │                     │                 │      │          ├─┬──────────────┤       │
+│          │  │                     │                 │      │          │ │    query     │       │
+"  https:   //    user   :   pass   @ sub.example.com : 8080   /p/a/t/h  ?  query=string   #hash "
+│          │  │          │          │    hostname     │ port │          │                │       │
+│          │  │          │          ├─────────────────┴──────┤          │                │       │
+│ protocol │  │ username │ password │          host          │          │                │       │
+├──────────┴──┼──────────┴──────────┼────────────────────────┤          │                │       │
+│   origin    │                     │         origin         │ pathname │     search     │ hash  │
+├─────────────┴─────────────────────┴────────────────────────┴──────────┴────────────────┴───────┤
+│                                              href                                              │
+└────────────────────────────────────────────────────────────────────────────────────────────────┘
+(All spaces in the "" line should be ignored. They are purely for formatting.)
+```
+
 ## The WHATWG URL API
+WHATWG API를 사용한 URL 문자열 구문 파싱
+```js
+const myURL =
+  new URL('https://user:pass@sub.example.com:8080/p/a/t/h?query=string#hash');
+```
+레거시 API를 사용한 URL 문자열 구문 파싱
+```js
+const url = require('url');
+const myURL =
+  url.parse('https://user:pass@sub.example.com:8080/p/a/t/h?query=string#hash');
+```
 ### Class: URL
 ### Class: URLSearchParams
