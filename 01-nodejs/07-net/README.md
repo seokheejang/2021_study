@@ -60,7 +60,7 @@ console.log(blockList.check('::ffff:123.123.123.123', 'ipv6')); // Prints: true
 ### socket.address()
 ### socket.bufferSize
 ### socket.bytesRead
-### ### socket.bytesWritten
+### socket.bytesWritten
 ### socket.connect()
 지정된 소켓에서 연결을 시작
 ### socket.connect(options[, connectListener])
