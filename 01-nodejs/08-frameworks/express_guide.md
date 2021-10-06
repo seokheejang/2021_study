@@ -1,6 +1,6 @@
 # Express Guide
 ## Routing
-라우팅은 애플리케이션 엔드 포인트(URI)의 정의, 그리고 URI가 클라이언트 요청에 응답하는 방식을 말한다.
+라우팅은 애플리케이션 엔드 포인트(URI)의 정의와 URI를 통해 클라이언트 request에 response하는 방식을 말한다.
 ```js
 var express = require('express');
 var app = express();
@@ -11,7 +11,7 @@ app.get('/', function(req, res) {
 });
 ```
 ### express.Router
-express.Router 클래스를 사용하면 모듈식 마운팅 가능한 핸들러를 작성할 수 있다. Router 인스턴스는 완전한 미들웨어이자 라우팅 시스템이며, 따라서 “미니 앱(mini-app)”이라고 불린다.
+express.Router 클래스를 사용하면 모듈식 마운팅이 가능한 핸들러를 작성할 수 있다. Router 인스턴스는 완전한 미들웨어이자 라우팅 시스템이며, “미니 앱(mini-app)”이라 불린다.
 
 birds.js
 ```js

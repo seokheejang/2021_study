@@ -8,10 +8,11 @@ Study Notes: Backend(Node.js) basic concept and example code for practice
 4. File system
 5. Events
 6. HTTP
-7. Frameworks - Express
-8. DB - (optional) MongoDB, Redis, Cassandra, CouchDB
-9. Testing - (optional) Jasmine, Jest, Chai, Mocha
-10. ...
+7. Net
+8. Frameworks - Express
+9. DB - (optional) MongoDB, Redis, Cassandra, CouchDB
+10. Testing - (optional) Jasmine, Jest, Chai, Mocha
+11. ...
 
 ## Reference
 https://nodejs.org/dist/latest-v14.x/docs/api/
