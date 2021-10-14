@@ -1,0 +1,15 @@
+{
+  "name": "kafka_example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shjang",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "node-rdkafka": "^2.11.0"
+  }
+}
