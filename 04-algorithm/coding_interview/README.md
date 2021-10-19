@@ -70,6 +70,7 @@ function solution(str) {
 console.log(solution(str));
 
 /* 
+* @output dkargo blockchain team
 * @hint .toUpperCase(), .toLowerCase()
 */
 ```
@@ -91,6 +92,7 @@ function solution(str) {
 console.log(solution(str));
 
 /* 
+* @output 0xabcdef123456
 * @hint .slice()
 */
 ```
@@ -118,6 +120,7 @@ function solution(str) {
 console.log(solution(str));
 
 /* 
+* @output 0x626c6f636b636861696e
 * @hint 유니코드 반환: .charCodeAt(), 16진수 변환: toString(16)
 */
 ```
@@ -156,7 +159,7 @@ const hexToUtf8 = function(hex) {
     return utf8.decode(str)
 }
 ```
-**json parsing**
+**JSON Object 다루기**
 ```js
 /* 
 * @문제 : myReceipt 객체의 nonce값이 30 이하 일 때, balance 총 합을 구하는 함수
@@ -198,7 +201,7 @@ function solution(obj) {
 }
 console.log(solution(myReceipt));
 ```
-**address check**
+**정규식으로 address check**
 ```js
 /* 
 * @문제 : 입력된 16진수 address 값이 올바른지 확인하는 함수
@@ -217,6 +220,7 @@ function solution(str) {
 console.log(solution(address));
 
 /* 
+* @output true
 * @hint 정규식 사용 / .test() 
 */
 ```
