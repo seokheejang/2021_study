@@ -93,7 +93,7 @@ console.log(solution(str));
 
 /* 
 * @result 0xabcdef123456
-* @hint .slice()
+* @hint String.prototype.slice()
 */
 ```
 **uft8ToHex**
@@ -121,7 +121,7 @@ console.log(solution(str));
 
 /* 
 * @result 0x626c6f636b636861696e
-* @hint 유니코드 반환: .charCodeAt(), 16진수 변환: toString(16)
+* @hint 유니코드 반환: String.prototype.charCodeAt(), 16진수 변환: String.prototype.toString(16)
 */
 ```
 **hexToUtf8**
@@ -164,7 +164,7 @@ const hexToUtf8 = function(hex) {
 /* 
 * @question : myReceipt 객체의 nonce값이 30 이하 일 때, balance의 총 합을 구하는 함수
 * @parameterExample : myReceipt
-* @input  {object} str
+* @input  {object} obj
 * @output {num} res
 */
 
@@ -174,7 +174,7 @@ const myReceipt = {
         {nonce: 20, balance: 150},
         {nonce: 30, balance: 200},
         {nonce: 40, balance: 100},
-        {nonce: 50, balance: 500},
+        {nonce: 50, balance: 500}
     ]
 }
 
@@ -201,6 +201,37 @@ function solution(obj) {
 }
 console.log(solution(myReceipt));
 ```
+```js
+/* 
+* @question : myReceipt 객체의 balance를 오름차순으로 정렬하고 처음과 마지막 index의 nonce값의 합을 구하는 함수
+* @parameterExample : myReceipt
+* @input  {object} obj
+* @output {num} res
+*/
+const myReceipt = {
+    transaction: [
+        {nonce: 50, balance: 500},
+        {nonce: 10, balance: 300},
+        {nonce: 20, balance: 150},
+        {nonce: 40, balance: 100},
+        {nonce: 30, balance: 200}
+    ]
+}
+
+function solution(obj) {
+    obj.transaction.sort(function (a, b) {
+        return a.balance - b.balance;
+    });
+    return obj.transaction[0].nonce + obj.transaction[obj.transaction.length - 1].nonce;
+}
+
+console.log(solution(myReceipt));
+
+/* 
+* @result 90
+* @hint Array.prototype.sort()
+*/
+```
 **정규식으로 address check**
 ```js
 /* 
@@ -221,8 +252,96 @@ console.log(solution(address));
 
 /* 
 * @result true
-* @hint 정규식 사용 / .test() 
+* @hint 정규식 사용 / RegExp.prototype.test()
 */
 ```
-2. callback 처리
-3. 동기/비동기 처리
+### callback 처리
+```js
+/* 
+* @question : nonce의 최종 값은?
+*/
+let nonce = 0;
+
+function nonceManager() { nonce++; }
+
+function startFunc(userId, cbNonce) {
+    console.log('start', userId, nonce);
+    cbNonce(middleFunc(userId));
+}
+
+function middleFunc(userId) {
+    finishFunc(userId, nonceManager);
+}
+
+function finishFunc(userId, cbNonce) {
+    console.log('finish', userId, nonce);
+    cbNonce();
+}
+
+let main = function() {
+    startFunc("0xA", nonceManager);
+    startFunc("0xB", nonceManager);
+    console.log("end nonce", nonce);
+}
+main();
+```
+### event 처리
+```js
+/* 
+* @question : event flow
+*/
+const USER_1 = 'USER_1';
+const USER_2 = 'USER_2';
+const SUB_USER_1 = "SUB_USER_1";
+const SUB_USER_2 = "SUB_USER_2";
+const SUB_USER_3 = "SUB_USER_3";
+const SUB_USER_4 = "SUB_USER_4";
+let nonce = 0;
+
+let msleep = function(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+process.on('event-wokrer', function(userId) {
+    console.log('start event-worker :[%s]', userId);
+    switch(userId) {
+        case USER_1 :
+            process.emit('event-nonce-manager', SUB_USER_1);
+            break;
+        case USER_2 :
+            process.emit('event-nonce-manager', SUB_USER_2);
+            break;
+        default:
+            break;
+    }
+    console.log('end event-worker :[%s]', userId);
+});
+
+process.on('event-nonce-manager', function(userId) {
+    let param = nonce++;
+    process.emit('event-main', userId, param);
+});
+
+let main = async function() {
+    try {
+		process.emit('event-wokrer', USER_1);
+        process.on('event-main', async function(userId, nonce){ 
+            console.log('start event-main :[%s], nonce:[%d]', userId, nonce);
+            await msleep(3000);
+            if(userId == SUB_USER_1) {
+                process.emit('event-nonce-manager', SUB_USER_3);
+            }
+            if(userId == SUB_USER_2) {
+                process.emit('event-nonce-manager', SUB_USER_4);
+            }
+            console.log('end event-main :[%s], nonce:[%d]', userId, nonce);
+        });
+        process.emit('event-wokrer', USER_2);
+        await msleep(10000);
+    } catch(error) {
+        console.log(error);
+    }
+}
+main();
+```
+### 동기/비동기 처리
