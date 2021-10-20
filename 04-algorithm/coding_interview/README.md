@@ -284,6 +284,9 @@ let main = function() {
     console.log("end nonce", nonce);
 }
 main();
+/* 
+* @result 4
+*/
 ```
 ### event 처리
 ```js
@@ -324,7 +327,7 @@ process.on('event-nonce-manager', function(userId) {
 
 let main = async function() {
     try {
-		process.emit('event-wokrer', USER_1);
+        process.emit('event-wokrer', USER_1);
         process.on('event-main', async function(userId, nonce){ 
             console.log('start event-main :[%s], nonce:[%d]', userId, nonce);
             await msleep(3000);
