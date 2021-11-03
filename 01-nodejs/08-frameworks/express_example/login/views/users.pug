@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  p #{title}
+  form(action='/users/register' method='post')
+    p
+        input(type='text' name='name')
+    p
+        input(type='email' name='email')
+    p
+        input(type='password' name='password')
+    p
+        input(type='submit')

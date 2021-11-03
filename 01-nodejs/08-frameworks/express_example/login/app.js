@@ -10,8 +10,7 @@ const MAX_AGE = 1000 * 60 * 60 * 3; // Three hours
 // Connecting to Database
 mongoose
   .connect(MongoURI, {
-    useNewUrlParser: true,
-    useCreateIndex: true
+    useNewUrlParser: true
   })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
