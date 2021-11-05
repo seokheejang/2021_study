@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1= title
-  p #{title}
+  p #{title} register
   form(action='/users/register' method='post')
     p
         input(type='text' name='name')
@@ -12,3 +12,12 @@ block content
         input(type='password' name='password')
     p
         input(type='submit')
+  p login
+  form(action='/users/login' method='post')
+    p
+        input(type='email' name='email')
+    p
+        input(type='password' name='password')
+    p
+        input(type='submit')
+  p login result name:[#{sessUser.name}] email:[#{sessUser.email}]
