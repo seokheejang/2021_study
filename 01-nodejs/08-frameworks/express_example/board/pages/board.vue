@@ -34,7 +34,7 @@
               <v-flex xs12 sm6 md4>
                 <v-text-field
                   label="게시판 이름"
-                  hint="당구모임"
+                  hint="name"
                   persistent-hint
                   required
                   v-model="form.name"
@@ -43,7 +43,7 @@
               <v-flex xs12 sm6>
                 <v-text-field
                   label="게시판 설명"
-                  hint="당구를 좋아하는 사람"
+                  hint="description"
                   persistent-hint
                   required
                   v-model="form.rmk"
@@ -52,7 +52,7 @@
               <v-flex xs12 sm6>
                 <v-select
                   :items="lvs"
-                  label="권한"
+                  label="가격"
                   required
                   v-model="form.lv"
                 ></v-select>
@@ -83,8 +83,10 @@
 </template>
 
 <script>
+import boardCard from './boardCard'
+
 export default {
-  components: { },
+  components: { boardCard },
   data () {
     return {
       boards: [],
@@ -119,7 +121,7 @@ export default {
       if (!this.form.name) {
         return this.pop('이름을 작성해주세요', 'warning')
       }
-      this.$axios.post('manage/board', this.form)
+      this.$axios.post('/api/manage/board', this.form)
         .then((r) => {
           this.dialog = false
           this.list()
@@ -129,7 +131,7 @@ export default {
         })
     },
     list () {
-      this.$axios.get('manage/board')
+      this.$axios.get('/api/manage/board')
         .then(({ data }) => {
           this.boards = data.ds
         })

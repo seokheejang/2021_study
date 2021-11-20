@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Board = require('../../../models/boards');
+const Board = require('../../models/boards');
 
 router.all('*', function(req, res, next) {
   // if (req.user.lv) return res.send({ success: false, msg: '권한이 없습니다.' })
