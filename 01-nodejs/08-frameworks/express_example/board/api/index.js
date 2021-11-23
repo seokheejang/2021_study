@@ -1,7 +1,9 @@
 const express = require('express');
-const router = require('express').Router()
 const db = require('./db');
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
     console.log('/api get');

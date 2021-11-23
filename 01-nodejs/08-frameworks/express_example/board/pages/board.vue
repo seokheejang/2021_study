@@ -50,12 +50,13 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6>
-                <v-select
-                  :items="lvs"
+                <v-text-field
                   label="가격"
+                  hint="price"
+                  persistent-hint
                   required
-                  v-model="form.lv"
-                ></v-select>
+                  v-model="form.price"
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -91,11 +92,10 @@ export default {
     return {
       boards: [],
       dialog: false,
-      lvs: [0, 1, 2, 3],
       form: {
         name: '',
         rmk: '',
-        lv: 0
+        price: 0
       },
       selected: 0,
       sb: {
@@ -114,7 +114,7 @@ export default {
       this.form = {
         name: '',
         rmk: '',
-        lv: 0
+        price: 0
       }
     },
     add () {

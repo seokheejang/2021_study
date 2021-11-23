@@ -7,7 +7,7 @@
       <v-divider light></v-divider>
       <v-card-text>
         <div>제목: {{board.title}}</div>
-        <div>권한: {{board.lv}}</div>
+        <div>가격: {{board.price}}</div>
         <div>설명: {{board.rmk}}</div>
       </v-card-text>
 
@@ -33,7 +33,7 @@
 
           <v-text-field
             label="게시판 제목"
-            :hint="form.title ? '' : '야구모임'"
+            :hint="form.title ? '' : '작품'"
             persistent-hint
             required
             v-model="form.title"
@@ -41,18 +41,19 @@
 
           <v-text-field
             label="게시판 설명"
-            :hint="form.rmk ? '' : '야구를 좋아하는 사람'"
+            :hint="form.rmk ? '' : '작품 설명'"
             persistent-hint
             required
             v-model="form.rmk"
           ></v-text-field>
 
-          <v-select
-            :items="lvs"
-            label="권한"
+          <v-text-field
+            label="가격"
+            :hint="form.price ? '' : '가격'"
+            persistent-hint
             required
-            v-model="form.lv"
-          ></v-select>
+            v-model="form.price"
+          ></v-text-field>
         </v-form>
 
       </v-card-text>
@@ -86,11 +87,10 @@ export default {
         msg: '',
         type: 'error'
       },
-      lvs: [0, 1, 2, 3],
       form: {
         name: '',
         title: '',
-        lv: 0,
+        price: 0,
         rmk: ''
       },
       edit: false
@@ -102,12 +102,12 @@ export default {
       this.form = {
         name: b.name,
         title: b.title,
-        lv: b.lv,
+        price: b.price,
         rmk: b.rmk
       }
     },
     mod (board) {
-      if (board.name === this.form.name && board.title === this.form.title && board.rmk === this.form.rmk && board.lv === this.form.lv) {
+      if (board.name === this.form.name && board.title === this.form.title && board.rmk === this.form.rmk && board.price === this.form.price) {
         return this.$store.commit('pop', { msg: '변경한 것이 없습니다.', color: 'warning' })
       }
       this.$axios.put(`/api/manage/board/${board._id}`, this.form)
@@ -118,7 +118,7 @@ export default {
           board.name = this.form.name
           board.title = this.form.title
           board.rmk = this.form.rmk
-          board.lv = this.form.lv
+          board.price = this.form.price
           this.edit = false
         })
         .catch((e) => {
