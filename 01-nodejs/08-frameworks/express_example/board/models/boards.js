@@ -4,6 +4,7 @@ const boardSchema = new mongoose.Schema({
   name: { type: String, default: '', index: true, unique: true },
   title: { type: String, default: '' },
   price: { type: Number, default: 0 },
+  like: { type: Number, default: 0 },
   rmk: { type: String, default: '' }
 })
 

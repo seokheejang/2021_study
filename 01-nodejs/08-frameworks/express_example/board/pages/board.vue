@@ -20,7 +20,7 @@
         fab
         @click="addDialog"
       >
-        <v-icon>add</v-icon>
+        <v-icon>+</v-icon>
       </v-btn>
     </v-layout>
     <v-dialog v-model="dialog" persistent max-width="500px">
@@ -95,7 +95,8 @@ export default {
       form: {
         name: '',
         rmk: '',
-        price: 0
+        price: 0,
+        like: 0
       },
       selected: 0,
       sb: {

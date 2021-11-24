@@ -9,12 +9,15 @@
         <div>제목: {{board.title}}</div>
         <div>가격: {{board.price}}</div>
         <div>설명: {{board.rmk}}</div>
+        <div>❤️: {{board.like}}</div>
       </v-card-text>
 
       <v-divider light></v-divider>
       <v-card-actions>
         <v-btn color="orange" @click="modeChange(board)">수정</v-btn>
         <v-btn color="error" @click="ca=true">삭제</v-btn>
+        <v-btn @click="like(board)">👍</v-btn>
+        <v-btn @click="unlike(board)">👎 </v-btn>
       </v-card-actions>
     </template>
     <template v-else>
@@ -24,8 +27,8 @@
       <v-card-text>
         <v-form>
           <v-text-field
-            label="게시판 경로"
-            :hint="form.name ? '' : '경로로 사용하니 영어로 써주세요'"
+            label="작성자"
+            :hint="form.name ? '' : '작성자 이름'"
             persistent-hint
             required
             v-model="form.name"
@@ -33,7 +36,7 @@
 
           <v-text-field
             label="게시판 제목"
-            :hint="form.title ? '' : '작품'"
+            :hint="form.title ? '' : '작품 이름'"
             persistent-hint
             required
             v-model="form.title"
@@ -91,6 +94,7 @@ export default {
         name: '',
         title: '',
         price: 0,
+        like: 0,
         rmk: ''
       },
       edit: false
@@ -106,9 +110,31 @@ export default {
         rmk: b.rmk
       }
     },
+    like (board) {
+      this.$axios.put(`/api/manage/board/like/${board._id}`, this.form)
+        .then((r) => {
+          this.$emit('list')
+        })
+        .catch((e) => {
+          if (!e.response) {
+            this.pop(e.message, 'warning')
+          }
+        })
+    },
+    unlike (board) {
+      this.$axios.put(`/api/manage/board/unlike/${board._id}`, this.form)
+        .then((r) => {
+          this.$emit('list')
+        })
+        .catch((e) => {
+          if (!e.response) {
+            this.pop(e.message, 'warning')
+          }
+        })
+    },
     mod (board) {
       if (board.name === this.form.name && board.title === this.form.title && board.rmk === this.form.rmk && board.price === this.form.price) {
-        return this.$store.commit('pop', { msg: '변경한 것이 없습니다.', color: 'warning' })
+        return this.pop('변경한 것이 없습니다.', 'warning')
       }
       this.$axios.put(`/api/manage/board/${board._id}`, this.form)
         .then((r) => {
@@ -123,7 +149,7 @@ export default {
         })
         .catch((e) => {
           if (!e.response) {
-            this.$store.commit('pop', { msg: e.message, color: 'warning' })
+            this.pop(e.message, 'warning')
           }
         })
     },
@@ -137,7 +163,7 @@ export default {
         })
         .catch((e) => {
           if (!e.response) {
-            this.$store.commit('pop', { msg: e.message, color: 'warning' })
+            this.pop(e.message, 'warning')
           }
         })
     },
@@ -150,7 +176,7 @@ export default {
       this.ma.type = t
       setTimeout(() => {
         this.ma.act = false
-      }, 6000)
+      }, 2000)
     }
   }
 }
