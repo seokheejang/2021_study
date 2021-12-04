@@ -6,18 +6,20 @@
       </v-card-title>
       <v-divider light></v-divider>
       <v-card-text>
+        <div align="right" justify="end">
+          <v-icon color="pink">mdi-heart</v-icon> {{board.like}}
+        </div>
         <div>제목: {{board.title}}</div>
         <div>가격: {{board.price}}</div>
         <div>설명: {{board.rmk}}</div>
-        <div>❤️: {{board.like}}</div>
       </v-card-text>
 
       <v-divider light></v-divider>
       <v-card-actions>
-        <v-btn color="orange" @click="modeChange(board)">수정</v-btn>
-        <v-btn color="error" @click="ca=true">삭제</v-btn>
-        <v-btn @click="like(board)">👍</v-btn>
-        <v-btn @click="unlike(board)">👎 </v-btn>
+        <v-btn text @click="modeChange(board)"><v-icon>mdi-pencil</v-icon></v-btn>
+        <v-btn text @click="ca=true"><v-icon>mdi-delete</v-icon></v-btn>
+        <v-btn color="blue lighten-1" text @click="like(board)"><v-icon>mdi-thumb-up</v-icon></v-btn>
+        <v-btn color="red lighten-1" text @click="unlike(board)"><v-icon>mdi-thumb-down</v-icon></v-btn>
       </v-card-actions>
     </template>
     <template v-else>
