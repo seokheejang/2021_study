@@ -185,15 +185,113 @@ function fiveMinutesHavePassed() public view returns (bool) {
 }
 ```
 ## 좀비 재사용 대기 시간
-
+### 구조체를 인수로 전달하기
+private 또는 internal 함수에 인수로서 구조체의 storage 포인터를 전달할 수 있다. 
+```js
+function _doStuff(Zombie storage _zombie) internal {
+  // _zombie로 할 수 있는 것들을 처리
+}
+```
 ## Public 함수 & 보안
-
+보안을 점검하는 좋은 방법은 모든 public과 external 함수를 검사하고, 사용자들이 그 함수들을 남용할 수 있는 방법을 생각해보는 것.
+함수들이 onlyOwner 같은 제어자를 갖지 않는 이상, 어떤 사용자든 해당 함수들을 호출하고 자신들이 원하는 모든 데이터를 함수에 전달할 수 있다.
+이런 남용을 막을 가장 쉬운 방법은 이 함수를 internal 사용하면 된다.
 ## 함수 제어자의 또 다른 특징
+### 인수를 가지는 함수 제어자
+```js
+// 사용자의 나이를 저장하기 위한 매핑
+mapping (uint => uint) public age;
 
+// 사용자가 특정 나이 이상인지 확인하는 제어자
+modifier olderThan(uint _age, uint _userId) {
+  require (age[_userId] >= _age);
+  _;
+}
+
+// 차를 운전하기 위햐서는 16살 이상이어야 함(적어도 미국에서는).
+// `olderThan` 제어자를 인수와 함께 호출하려면 이렇게 하면 된다:
+function driveCar(uint _userId) public olderThan(16, _userId) {
+  // 필요한 함수 내용들
+}
+```
+
+```js
+modifier aboveLevel(uint _level, uint _zombieId) {
+    require(zombies[_zombieId].level >= _level);
+    _; // 함수의 나머지 내용을 실행
+}
+```
 ## 좀비 제어자
+```js
+  function changeName(uint _zombieId, string _newName) external aboveLevel(2, _zombieId) {
+    require(msg.sender == zombieToOwner[_zombieId]);
+    zombies[_zombieId].name = _newName;
+  }
 
+  function changeDna(uint _zombieId, uint _newDna) external aboveLevel(20, _zombieId) {
+    require(msg.sender == zombieToOwner[_zombieId]);
+    zombies[_zombieId].dna = _newDna;
+  }
+```
 ## 'View' 함수를 사용해 가스 절약하기
+view 함수는 사용자에 의해 외부에서 호출되었을 때 가스를 전혀 소모하지 않는다.
+이건 view 함수가 블록체인 상에서 실제로 어떤 것도 수정하지 않기 떄문이다. 
+> 참고: 만약 view 함수가 동일 컨트랙트 내에 있는, view 함수가 아닌 다른 함수에서 내부적으로 호출될 경우, 여전히 가스를 소모. 이것은 다른 함수가 이더리움에 트랜잭션을 생성하고, 이는 모든 개별 노드에서 검증되어야 하기 때문이다. view 함수는 외부에서 호출됐을 때에만 무료.
+```js
+  function getZombiesByOwner(address _owner) external view returns(uint[]) {
 
+  }
+```
 ## Storage는 비싸다
-
+솔리디티에서 더 비싼 연산 중 하나는 바로 storage를 쓰는 행위이다.
+데이터의 일부를 쓰거나 바꿀 때마다, 블록체인에 영구적으로 기록되기 때문이다.
+비용을 최소화하기 위해서, 진짜 필요한 경우가 아니면 storage에 데이터를 쓰지 않는 것이 좋으며, 어떤 배열에서 내용을 빠르게 찾기 위해서는 단순히 변수에 저장하는 것 대신 함수가 호출될 때마다 배열을 memory에 다시 만드는 것이 효율적이다.
+### 메모리에 배열 선언하기
+Storage에 아무것도 쓰지 않고도 함수 안에 새로운 배열을 만들려면 배열에 memory 키워드를 쓰면 된다.
+이 배열은 함수가 끝날 때까지만 존재할 것이고, 이는 storage의 배열을 직접 업데이트하는 것보다 가스 소모 측면에서 훨씬 저렴하다. (외부에서 호출되는 view 함수라면 무료)
+```js
+function getArray() external pure returns(uint[]) {
+  // 메모리에 길이 3의 새로운 배열을 생성한다.
+  uint[] memory values = new uint[](3);
+  // 여기에 특정한 값들을 넣는다.
+  values.push(1);
+  values.push(2);
+  values.push(3);
+  // 해당 배열을 반환한다.
+  return values;
+}
+```
+> 참고: 메모리 배열은 반드시 길이 인수와 함께 생성되어야 한다(이 예시에서는, 3). 메모리 배열은 현재로서는 storage 배열처럼 array.push()로 크기가 조절되지는 않는다. 
 ## For 반복문
+```js
+function getEvens() pure external returns(uint[]) {
+  uint[] memory evens = new uint[](5);
+  // 새로운 배열의 인덱스를 추적하는 변수
+  uint counter = 0;
+  // for 반복문에서 1부터 10까지 반복함
+  for (uint i = 1; i <= 10; i++) {
+    // `i`가 짝수라면...
+    if (i % 2 == 0) {
+      // 배열에 i를 추가함
+      evens[counter] = i;
+      // `evens`의 다음 빈 인덱스 값으로 counter를 증가시킴
+      counter++;
+    }
+  }
+  return evens;
+}
+```
+
+```js
+  function getZombiesByOwner(address _owner) external view returns(uint[]) {
+    uint[] memory result = new uint[](ownerZombieCount[_owner]);
+    uint counter = 0;
+    for (uint i = 0; i < zombies.length; i++) {
+      if (zombieToOwner[i] == _owner) {
+        result[counter] = i;
+        counter++;
+      }
+    }
+    return result;
+  }
+```
